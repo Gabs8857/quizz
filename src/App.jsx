@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import LoginForm from './components/LoginForm';
 import ProtectedRoute from './components/ProtectedRoute';
-import CourseList from './components/CourseList';
-import EventCalendar from './components/EventCalendar';
 import QuizList from './components/QuizList';
 import AuthService from './services/AuthService';
 
@@ -81,30 +79,11 @@ function App() {
         </header>
 
         <section style={{ marginBottom: '2rem' }}>
-          <EventCalendar />
-        </section>
-
-        <section style={{ marginBottom: '2rem' }}>
-          <h2>Mes cours</h2>
-          <CourseList />
-        </section>
-
-        <section style={{ marginBottom: '2rem' }}>
           <QuizList />
         </section>
-
-        {process.env.NODE_ENV === 'development' && (
-          <details style={{ marginTop: '2rem', padding: '1rem', background: '#f5f5f5', borderRadius: '4px' }}>
-            <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>Debug : Profil utilisateur</summary>
-            <pre style={{ overflow: 'auto', maxHeight: '400px' }}>
-              {JSON.stringify(user, null, 2)}
-            </pre>
-          </details>
-        )}
       </div>
     </ProtectedRoute>
   );
 }
 
 export default App;
-
