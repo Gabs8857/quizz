@@ -3,6 +3,7 @@ import LoginForm from './components/LoginForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import QuizList from './components/QuizList';
 import AuthService from './services/AuthService';
+import './styles/quiz.css';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -34,7 +35,7 @@ function App() {
   };
 
   if (loading) {
-    return <div style={{ padding: '2rem', textAlign: 'center' }}>Chargement...</div>;
+    return <div className="loading">Chargement...</div>;
   }
 
   if (!user) {
@@ -48,39 +49,31 @@ function App() {
 
   return (
     <ProtectedRoute>
-      <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <header style={{ marginBottom: '2rem', borderBottom: '2px solid #007bff', paddingBottom: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h1 style={{ margin: 0 }}>Dashboard JSP</h1>
-              <p style={{ margin: '0.5rem 0', color: '#666' }}>
-                Bienvenue, {user.prenom} {user.nom} !
-              </p>
-              {user.grade && (
-                <p style={{ margin: 0, color: '#007bff', fontWeight: 'bold' }}>
-                  Grade : {typeof user.grade === 'object' ? user.grade.titre : user.grade}
-                </p>
-              )}
+      <div className="app-container">
+        <header className="header">
+          <div className="header-content">
+            <div className="header-title">
+              <div>
+                <h1>Dashboard JSP</h1>
+                <div className="user-info">
+                  Bienvenue, {user.prenom} {user.nom}
+                  {user.grade && (
+                    <span style={{ marginLeft: '1rem', fontWeight: 'bold' }}>
+                      • Grade : {typeof user.grade === 'object' ? user.grade.titre : user.grade}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '0.5rem 1rem',
-                background: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
+            <button onClick={handleLogout} className="btn-logout">
               Déconnexion
             </button>
           </div>
         </header>
 
-        <section style={{ marginBottom: '2rem' }}>
+        <main className="main-content">
           <QuizList />
-        </section>
+        </main>
       </div>
     </ProtectedRoute>
   );
