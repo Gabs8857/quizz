@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import Quiz from './Quiz';
+import '../styles/quiz.css';
 
-/**
- * Composant pour afficher la liste des quiz disponibles
- */
 function QuizList() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,29 +34,17 @@ function QuizList() {
 
   const handleQuizComplete = () => {
     setSelectedQuiz(null);
-    loadQuizzes(); // Recharger la liste après avoir terminé un quiz
+    loadQuizzes();
   };
 
   const handleBack = () => {
     setSelectedQuiz(null);
   };
 
-  // Si un quiz est sélectionné, afficher le composant Quiz
   if (selectedQuiz) {
     return (
       <div>
-        <button
-          onClick={handleBack}
-          style={{
-            marginBottom: '1rem',
-            padding: '0.5rem 1rem',
-            background: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={handleBack} className="btn-secondary" style={{ marginBottom: '1rem' }}>
           ← Retour à la liste
         </button>
         <Quiz quizId={selectedQuiz.id} onComplete={handleQuizComplete} />
@@ -67,25 +53,14 @@ function QuizList() {
   }
 
   if (loading) {
-    return <div style={{ padding: '2rem', textAlign: 'center' }}>Chargement des quiz...</div>;
+    return <div className="loading">Chargement des quiz...</div>;
   }
 
   if (error) {
     return (
-      <div style={{ padding: '1rem', background: '#ffe6e6', color: '#d32f2f', borderRadius: '4px' }}>
+      <div className="error">
         <strong>Erreur :</strong> {error}
-        <button
-          onClick={loadQuizzes}
-          style={{
-            marginLeft: '1rem',
-            padding: '0.5rem 1rem',
-            background: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
+        <button onClick={loadQuizzes} className="btn-primary" style={{ marginLeft: '1rem' }}>
           Réessayer
         </button>
       </div>
@@ -93,90 +68,37 @@ function QuizList() {
   }
 
   if (quizzes.length === 0) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-        Aucun quiz disponible pour le moment.
-      </div>
-    );
+    return <div className="loading">Aucun quiz disponible pour le moment.</div>;
   }
+
+  const quizIcons = ['🚑', '🔥', '💊', '🏥', '⛑️', '🚨', '📋', '🎯', '✅'];
 
   return (
     <div>
-      <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 style={{ margin: 0 }}>Quiz disponibles</h2>
-        <button
-          onClick={loadQuizzes}
-          style={{
-            padding: '0.5rem 1rem',
-            background: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-          }}
-        >
-          🔄 Actualiser
-        </button>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
-        {quizzes.map((quiz) => (
+      <h2 style={{ fontSize: '2rem', color: '#1E1E5C', marginBottom: '1rem' }}>Quiz disponibles</h2>
+      <div className="quiz-grid">
+        {quizzes.map((quiz, index) => (
           <div
             key={quiz.id}
-            style={{
-              padding: '1.5rem',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              background: 'white',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              cursor: 'pointer',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            }}
+            className={`quiz-card ${index % 2 === 0 ? '' : 'blue'}`}
             onClick={() => handleQuizSelect(quiz)}
           >
-            <h3 style={{ margin: '0 0 0.5rem 0', color: '#007bff' }}>
+            <div className="quiz-icon">
+              {quizIcons[index % quizIcons.length]}
+            </div>
+            <div className="quiz-title">
               {quiz.titre || quiz.nom || `Quiz #${quiz.id}`}
-            </h3>
+            </div>
             {quiz.description && (
-              <p style={{ margin: '0 0 1rem 0', color: '#666', fontSize: '0.9rem' }}>
+              <div className="quiz-description">
                 {quiz.description}
-              </p>
+              </div>
             )}
             {quiz.nombreQuestions && (
-              <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: '#888' }}>
+              <div className="quiz-info">
                 📝 {quiz.nombreQuestions} question{quiz.nombreQuestions > 1 ? 's' : ''}
-              </p>
+              </div>
             )}
-            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #eee' }}>
-              <button
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  background: '#28a745',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleQuizSelect(quiz);
-                }}
-              >
-                Commencer le quiz
-              </button>
-            </div>
           </div>
         ))}
       </div>

@@ -178,7 +178,7 @@ function Quiz({ quizId, onComplete }) {
             {result.correct_answers || 0} / {result.total_questions || total} bonne{result.total_questions > 1 ? 's' : ''} réponse{(result.total_questions || total) > 1 ? 's' : ''}
           </p>
           <p style={{ fontSize: '1rem', color: '#888', marginTop: '0.5rem' }}>
-            ({percentage}%)
+            ({percentage/2}%)
           </p>
         </div>
 
